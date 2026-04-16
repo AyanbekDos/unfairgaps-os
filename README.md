@@ -1,21 +1,36 @@
 # UnfairGaps
 
-> Find real business pain points from public enforcement data. Court filings, regulatory fines, documented financial losses - not AI guesswork.
+> AI is replacing engineers. The safest career move? Find a boring niche that Big Tech will never touch. This tool finds those niches.
 
 <!-- TODO: GIF demo here -->
 
-**Already validated by real people:**
+## The Story
+
+I spent 4 months and $5K in API credits building this. The idea: every SEC fine, OSHA citation, and court filing is a business screaming **"I NEED A SOLUTION."** So I built AI pipelines that find these screams automatically.
+
+I tried to make it a startup. Posted on Reddit:
 - [659 upvotes on r/Entrepreneur](https://www.reddit.com/r/Entrepreneur/comments/1qc0cwd/) - "I scraped 48,000 court filings to stop guessing business ideas"
-- [237 comments on r/SideProject](https://www.reddit.com/r/SideProject/comments/1qurbh2/) - people requested pain reports for their industries in the comments
-- [102 upvotes on r/Logistics](https://www.reddit.com/r/logistics/) - trucking industry pain analysis
+- [237 comments on r/SideProject](https://www.reddit.com/r/SideProject/comments/1qurbh2/) - people begged me to scan their industries
+- [102 upvotes on r/Logistics](https://www.reddit.com/r/logistics/) - trucking pain analysis
 
-The methodology works. Now it's open source.
+The methodology clearly works. One user took my research and is now building a company around it.
 
-## What is this?
+But nobody wanted to pay. 200 visitors, 19 signups, 0 purchases. Pain intelligence is valuable but one-time - once you have the report, you don't need another one.
 
-Every SEC fine, EPA violation, OSHA citation, and court filing is a business screaming **"I NEED A SOLUTION."** UnfairGaps finds these screams automatically.
+**So I'm giving it all away.** 4 pipelines, 17 prompts, a Python CLI, and AI agent skills. Free. MIT license.
 
-4 pipelines. Works in any country. One API key. 5 minutes to first result.
+## Why This Matters Right Now
+
+Every week another headline: "Google cuts 12K engineers." "Meta lays off entire ML team." "Startup replaces 60% of engineering with AI."
+
+The standard advice is "build a side project." But build what?
+
+The most profitable software businesses solve painfully boring problems for industries that never make TechCrunch:
+- Plumbing contractors paying **$50K/year in OSHA fines**
+- Solar installers losing **$12K per rejected warranty claim** because a field tech forgot to geotag a photo
+- Restaurant owners settling **ADA lawsuits for $20-50K** each
+
+AI can't replace you if your customers are plumbing contractors who barely use email. **The boring niches are where the money is.** This tool finds them.
 
 ## The 4 Pipelines
 
@@ -26,7 +41,13 @@ Every SEC fine, EPA violation, OSHA citation, and court filing is a business scr
 | **Site Pain Audit** | URL | Claims vs reality report | "Is this competitor solving real problems or selling vitamins?" |
 | **Customer Pain Finder** | URL | Your customers' documented pain points | "What are my customers actually losing money on?" |
 
-## How it works
+## The Philosophy
+
+**Annoyances vs Liabilities.**
+
+Most "market research" finds annoyances. UnfairGaps finds liabilities - places where businesses are **legally required** to lose money. If a company is paying a fine or settling a lawsuit, they aren't looking for a nice-to-have tool. They're looking for a tourniquet.
+
+## How It Works
 
 Each pipeline is a chain of AI prompts that:
 
@@ -41,23 +62,23 @@ All prompts are in `prompts/` - fully transparent, fully customizable.
 
 ### Requirements
 
-- Python 3.10+ (for scrapling)
+- Python 3.10+
 - A Perplexity API key
 
 ### Get your free API key
 
-Perplexity gives **$5/month free API credits** to every account. That's enough for ~20-30 full pipeline runs.
+Perplexity gives **$5/month free API credits** to every account. That's enough for ~20 full pipeline runs. No credit card needed.
 
 1. Go to [perplexity.ai/settings/api](https://perplexity.ai/settings/api)
 2. Create an API key
-3. You're done. No credit card needed.
+3. Done.
 
 ### Install
 
 ```bash
 git clone https://github.com/AyanbekDos/unfairgaps-os.git
 cd unfairgaps-os
-pip install scrapling
+pip install scrapling httpx
 cp .env.example .env
 # Edit .env and paste your PERPLEXITY_API_KEY
 ```
@@ -83,7 +104,6 @@ python run.py customer-pains --url "https://your-site.com"
 Works with Claude Code, Cursor, Windsurf, Cline, or any AI coding assistant:
 
 ```bash
-# Copy skill files to your AI agent's skills directory
 cp skills/*.md ~/.claude/skills/  # for Claude Code
 ```
 
@@ -107,52 +127,15 @@ No code required. Works with any LLM that can search the web.
 
 ## Country Support
 
-UnfairGaps works worldwide. When you specify a country, Claude automatically determines:
+Works worldwide. When you specify a country, Claude automatically determines:
 
-- Regulatory agencies (OSHA in US, Роструд in Russia, BG BAU in Germany...)
+- Regulatory agencies (OSHA in US, BG BAU in Germany, GASK in Kazakhstan...)
 - Court systems and legal databases
 - Search language
 - Local currency
 - Industry-specific regulations
 
 Tested with: US, DE, KZ, RU, UK, BR, IN, AU, and more.
-
-## Project Structure
-
-```
-unfairgaps/
-  README.md
-  .env.example          # Just one key: PERPLEXITY_API_KEY
-  run.py                # CLI entry point
-  prompts/
-    shared/             # Reusable across all pipelines
-      country-context.md
-      site-analyzer.md
-      sonar-search.md
-      evidence-extractor.md
-      topic-clusterer.md
-      report-formatter.md
-    industry-scan/      # Pipeline 1
-      01-query-architect.md
-      05-opportunity-writer.md
-    idea-validator/     # Pipeline 2
-      01-idea-parser.md
-      02-validation-query-architect.md
-      05-validation-scorer.md
-    site-audit/         # Pipeline 3
-      02-claimed-pain-extractor.md
-      03-reality-check-query-architect.md
-      06-pain-solution-matcher.md
-    customer-pains/     # Pipeline 4
-      02-query-architect.md
-      05-relevance-filter.md
-      07-opportunity-generator.md
-  skills/               # AI agent skill files
-    unfairgaps-industry-scan.md
-    unfairgaps-validate-idea.md
-    unfairgaps-site-audit.md
-    unfairgaps-customer-pains.md
-```
 
 ## How is this different from ChatGPT?
 
@@ -163,12 +146,6 @@ unfairgaps/
 | Structure | Free-form chat | 4 specialized pipelines with defined outputs |
 | Verification | Trust the AI | Every finding has a source URL |
 | Country-aware | Sometimes | Always - regulatory agencies, language, courts |
-
-## The Philosophy
-
-**Annoyances vs Liabilities.**
-
-Most "market research" finds annoyances. UnfairGaps finds liabilities - places where businesses are **legally required** to lose money. If a company is paying a fine or settling a lawsuit, they aren't looking for a nice-to-have tool. They're looking for a tourniquet.
 
 ## Data Sources
 
@@ -193,22 +170,38 @@ With Perplexity's free $5/month:
 
 One pipeline run costs roughly $0.50-1.50 depending on complexity.
 
-## Contributing
+## Project Structure
 
-PRs welcome. Especially:
-- New country-specific regulatory source adapters
-- Pipeline improvements and prompt refinements
-- Translations of documentation
-- Bug reports and test results
+```
+unfairgaps-os/
+  README.md
+  .env.example          # Just one key: PERPLEXITY_API_KEY
+  run.py                # CLI entry point
+  prompts/
+    shared/             # Reusable across all pipelines
+    industry-scan/      # Pipeline 1: Find industry pain points
+    idea-validator/     # Pipeline 2: Validate business ideas
+    site-audit/         # Pipeline 3: Claims vs reality
+    customer-pains/     # Pipeline 4: Your customers' pain points
+  skills/               # AI agent skill files (Claude Code, Cursor, etc.)
+```
+
+## Help Wanted
+
+I'm not a professional programmer. I built this because I needed it. Here's where I need help:
+
+- **Direct database connectors** - Right now we search through Perplexity. Building direct connectors to PACER, SEC EDGAR, EPA ECHO, and OSHA databases would make results 10x more reliable and faster.
+- **Prompt engineering** - The 17 prompts work, but they're not perfect. I'd love prompt engineers to tear them apart.
+- **Python improvements** - The CLI runs but it's not elegant. Any Pythonista who wants to refactor - please do.
+- **Country adapters** - Every country has its own regulatory databases. I know US and Kazakhstan well. Help me add yours.
+- **Bug reports** - Run it on your industry and tell me what breaks.
 
 ## License
 
 MIT
 
-## Star History
-
-<!-- TODO: Add star history badge -->
-
 ---
 
-Built by [@AyanbekDos](https://github.com/AyanbekDos). If this helped you find a real business opportunity, I'd love to hear about it.
+Built by [@AyanbekDos](https://github.com/AyanbekDos) from Kazakhstan. 4 months of work, open-sourced because the world needs more people building boring, profitable businesses instead of chasing the next AI wrapper.
+
+If this helped you find a real business opportunity, I'd love to hear about it.
