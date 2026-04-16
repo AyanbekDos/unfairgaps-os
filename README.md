@@ -20,11 +20,11 @@ I posted the results on Reddit:
 - [237 comments on r/SideProject](https://www.reddit.com/r/SideProject/comments/1qurbh2/) - people begged me to scan their industries
 - [102 upvotes on r/Logistics](https://www.reddit.com/r/logistics/) - trucking pain analysis
 
-One user took my research and is now building a company around a gap I found.
+One user took my research and is now building a company around a gap I found. The posts got over 1.5M views total.
 
-I tried to turn this into a SaaS. 200 visitors, 19 signups, 0 purchases. The methodology is valuable but one-time - once you have the report, you don't come back. My target audience is developers, and developers will always just build it themselves if you show them the approach.
+I tried to turn this into a SaaS. But I kept feeling like I was doing something wrong - locking up a methodology that could help thousands of people find real businesses. If developers start scanning boring niches and building solutions, everyone wins. Society wins because broken processes get fixed. The developer wins because they build a real business. And I win because I stop carrying the guilt of hoarding this.
 
-**So I'm done chasing Product-Market Fit. Here's everything I built.** 4 pipelines, 17 prompts, a Python CLI, and AI agent skills. Free. MIT license. Take it, improve it, build a boring profitable business with it.
+**So here's everything I built.** 4 pipelines, 17 prompts, a Python CLI, and AI agent skills. Free. MIT license. Take it, improve it, build a boring profitable business with it.
 
 ## Why This Matters Right Now
 
