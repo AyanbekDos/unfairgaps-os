@@ -6,18 +6,25 @@
 
 ## The Story
 
-I spent 4 months and $5K in API credits building this. The idea: every SEC fine, OSHA citation, and court filing is a business screaming **"I NEED A SOLUTION."** So I built AI pipelines that find these screams automatically.
+I spent 2 years building tools nobody wanted. Every time it was the same: I'd get excited about a "clever" idea, spend months building it, and discover that nobody cared enough to pay. I was solving annoyances, not real problems.
 
-I tried to make it a startup. Posted on Reddit:
+Then I had a realization: **stop brainstorming ideas. Start reading court filings.** If a company is paying a fine or settling a lawsuit, they aren't looking for a "nice-to-have" tool. They're looking for a tourniquet.
+
+So I burned $5K in API credits and built AI pipelines that scan enforcement data automatically. I found things like:
+- Solar installers losing **$12K per rejected warranty claim** because field techs forget to geotag photos
+- E-commerce stores settling **4,000+ ADA lawsuits/year** at $20-50K each
+- Apparel brands writing off **$1-3M/year** on returns from assembly defects
+
+I posted the results on Reddit:
 - [659 upvotes on r/Entrepreneur](https://www.reddit.com/r/Entrepreneur/comments/1qc0cwd/) - "I scraped 48,000 court filings to stop guessing business ideas"
 - [237 comments on r/SideProject](https://www.reddit.com/r/SideProject/comments/1qurbh2/) - people begged me to scan their industries
 - [102 upvotes on r/Logistics](https://www.reddit.com/r/logistics/) - trucking pain analysis
 
-The methodology clearly works. One user took my research and is now building a company around it.
+One user took my research and is now building a company around a gap I found.
 
-But nobody wanted to pay. 200 visitors, 19 signups, 0 purchases. Pain intelligence is valuable but one-time - once you have the report, you don't need another one.
+I tried to turn this into a SaaS. 200 visitors, 19 signups, 0 purchases. The methodology is valuable but one-time - once you have the report, you don't come back. My target audience is developers, and developers will always just build it themselves if you show them the approach.
 
-**So I'm giving it all away.** 4 pipelines, 17 prompts, a Python CLI, and AI agent skills. Free. MIT license.
+**So I'm done chasing Product-Market Fit. Here's everything I built.** 4 pipelines, 17 prompts, a Python CLI, and AI agent skills. Free. MIT license. Take it, improve it, build a boring profitable business with it.
 
 ## Why This Matters Right Now
 
