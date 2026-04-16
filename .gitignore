@@ -1,0 +1,7 @@
+.env
+*.pyc
+__pycache__/
+report-*.md
+validation-*.md
+audit-*.md
+pains-*.md
