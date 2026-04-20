@@ -69,22 +69,39 @@ All prompts are in `prompts/` - fully transparent, fully customizable.
 
 There are **two equivalent modes**. Pick one. You can mix them per-task.
 
-### Option A — Run it in Claude Code for free (no API key)
+### Option A — Run it in Claude Code / Cursor / Codex for free (no API key)
 
-If you have Claude Code installed, you don't need any API key at all. The skills use Claude Code's built-in `WebSearch` and `WebFetch` tools directly. Just copy the skill files into your Claude Code skills folder:
+If you use any agent that supports the [skills.sh ecosystem](https://skills.sh) (Claude Code, Cursor, Codex, VSCode, Cline, and others), install the skills with one command each:
 
 ```bash
-git clone https://github.com/AyanbekDos/unfairgaps-os.git
-cp unfairgaps-os/skills/*.md ~/.claude/skills/
+npx skills add AyanbekDos/unfairgaps-os@unfairgaps-industry-scan
+npx skills add AyanbekDos/unfairgaps-os@unfairgaps-validate-idea
+npx skills add AyanbekDos/unfairgaps-os@unfairgaps-site-audit
+npx skills add AyanbekDos/unfairgaps-os@unfairgaps-customer-pains
 ```
 
-Then in any Claude Code session, just ask:
+Or install all four at once:
+
+```bash
+npx skills add AyanbekDos/unfairgaps-os
+```
+
+Then in any agent session, just ask:
 
 ```
 /unfairgaps-industry-scan construction in US
 /unfairgaps-validate-idea "SaaS for warehouse ergonomic compliance" in US
 /unfairgaps-site-audit https://competitor.com
 /unfairgaps-customer-pains https://my-saas.com
+```
+
+No Perplexity API key, no Python environment, no config. The skill uses your agent's built-in `WebSearch` and `WebFetch` tools.
+
+**Prefer a manual install?** Clone the repo and copy the skill folders:
+
+```bash
+git clone https://github.com/AyanbekDos/unfairgaps-os.git
+cp -r unfairgaps-os/skills/unfairgaps-* ~/.claude/skills/
 ```
 
 Claude Code runs the 4-phase protocol (research plan → candidate pool → evidence ledger with compressed cards → unfairgap pattern detection → final report). Output lands in your current working directory as `report-*.md` with a full run manifest for reproducibility.
@@ -129,11 +146,11 @@ python run.py customer-pains --url "https://your-site.com"
 
 ### AI Agent support
 
-Officially supported: **Claude Code** (full native skill flow, no API key needed — see Option A above).
+Native skill flow works in any agent on the [skills.sh ecosystem](https://skills.sh) — Claude Code, Cursor, Codex, VSCode, Cline, and others. Install via `npx skills add AyanbekDos/unfairgaps-os` (see Option A).
 
-Unofficial: Cursor / Windsurf / Cline / other agents. Skill files are Claude Code format. In other agents they work as **prompt-copy-paste instructions only** — you'll need to paste the `SKILL.md` content into your agent and run the phases manually. Results may vary. If someone validates a full skill flow in Cursor/Windsurf, a PR updating this section is welcome.
+Agents outside the skills.sh ecosystem: copy-paste the `SKILL.md` content into your agent and run the 4-phase protocol manually. Results depend on the agent's WebSearch/WebFetch support.
 
-For "I don't use any AI agent" — copy-paste the prompts from `prompts/` into ChatGPT or Claude.ai. Works too, just more manual.
+No AI agent at all: copy-paste the prompts from `prompts/` into ChatGPT or Claude.ai. Works, just more manual.
 
 ### Use prompts manually
 
