@@ -434,9 +434,14 @@ def pipeline_site_audit(url: str):
     if not claims:
         print("ERROR: Failed to extract claims")
         return
-    claimed_pains = claims.get("claimed_pains", [])
+    if isinstance(claims, list):
+        claimed_pains = claims
+        marketing_quality = "?"
+    else:
+        claimed_pains = claims.get("claimed_pains", [])
+        marketing_quality = claims.get("overall_marketing_quality", "?")
     print(f"  Found {len(claimed_pains)} claimed pains")
-    print(f"  Marketing quality: {claims.get('overall_marketing_quality', '?')}")
+    print(f"  Marketing quality: {marketing_quality}")
 
     # Step 4: Reality Check Query Architect
     step("Step 4/6: Composing reality-check queries")
