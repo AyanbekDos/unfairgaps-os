@@ -71,37 +71,30 @@ There are **two equivalent modes**. Pick one. You can mix them per-task.
 
 ### Option A — Run it in Claude Code / Cursor / Codex for free (no API key)
 
-If you use any agent that supports the [skills.sh ecosystem](https://skills.sh) (Claude Code, Cursor, Codex, VSCode, Cline, and others), install the skills with one command each:
-
-```bash
-npx skills add AyanbekDos/unfairgaps-os@unfairgaps-industry-scan
-npx skills add AyanbekDos/unfairgaps-os@unfairgaps-validate-idea
-npx skills add AyanbekDos/unfairgaps-os@unfairgaps-site-audit
-npx skills add AyanbekDos/unfairgaps-os@unfairgaps-customer-pains
-```
-
-Or install all four at once:
+If you use any agent that supports the [skills.sh ecosystem](https://skills.sh) (Claude Code, Cursor, Codex, VSCode, Cline, and others), install with one command:
 
 ```bash
 npx skills add AyanbekDos/unfairgaps-os
 ```
 
-Then in any agent session, just ask:
+That installs one skill — `unfairgaps` — which bundles all four operations of the methodology. Call them in any agent session:
 
 ```
-/unfairgaps-industry-scan construction in US
-/unfairgaps-validate-idea "SaaS for warehouse ergonomic compliance" in US
-/unfairgaps-site-audit https://competitor.com
-/unfairgaps-customer-pains https://my-saas.com
+/unfairgaps industry-scan construction in US
+/unfairgaps validate-idea "SaaS for warehouse ergonomic compliance" in US
+/unfairgaps site-audit https://competitor.com
+/unfairgaps customer-pains https://my-saas.com
 ```
+
+The four operations share the same 4-phase unfairgap-detection protocol (research plan → candidate pool → evidence ledger → unfairgap pattern synthesis → report). Only the input and the final-report shape differ per operation.
 
 No Perplexity API key, no Python environment, no config. The skill uses your agent's built-in `WebSearch` and `WebFetch` tools.
 
-**Prefer a manual install?** Clone the repo and copy the skill folders:
+**Prefer a manual install?** Clone the repo and copy the skill folder:
 
 ```bash
 git clone https://github.com/AyanbekDos/unfairgaps-os.git
-cp -r unfairgaps-os/skills/unfairgaps-* ~/.claude/skills/
+cp -r unfairgaps-os/skills/unfairgaps ~/.claude/skills/
 ```
 
 Claude Code runs the 4-phase protocol (research plan → candidate pool → evidence ledger with compressed cards → unfairgap pattern detection → final report). Output lands in your current working directory as `report-*.md` with a full run manifest for reproducibility.
