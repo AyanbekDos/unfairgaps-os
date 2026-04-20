@@ -1,88 +1,138 @@
 ---
 name: unfairgaps-customer-pains
-description: Find your customers' documented pain points from court filings and enforcement data
+description: Find your customers' documented pain points - unfairgap-style, grounded in court filings and enforcement data per segment. Dual mode - native Claude Code or delegates to run.py if PERPLEXITY_API_KEY set.
+version: 0.4.0-proto
 ---
 
-# UnfairGaps Customer Pain Finder
+# THE ONE THING TO REMEMBER
 
-You are running the UnfairGaps Customer Pain Finder pipeline. This discovers what your customers are ACTUALLY losing money on - documented in court records, regulatory fines, and enforcement actions.
+**We find unfairgaps in YOUR CUSTOMERS' regulatory exposure — not yours.**
 
-## Input
+Your customers are companies that spend money to fix pains they already know about (their own). Your leverage is knowing what's hitting THEIR customers in court / regulatory data that they can then pitch as a solution.
 
-Parse the user's request to extract:
-- **url** (required): The user's website URL
+We find **B2B2C unfairgaps**: systemic pains in your customers' customer segments, grounded in enforcement evidence. These become the exact hooks your customers need to sell their product.
 
-## Pipeline Steps
+## Input contract
 
-### Step 1: Scrape the Website
+- `url` (required): User's website
 
-Get clean text content (try Scrapling -> HTTP fetch -> web search fallback). Keep first 5000 chars.
+## Execution mode selection
 
-### Step 2: Analyze Business Model
+If `PERPLEXITY_API_KEY` set and user didn't request native: delegate to `python run.py customer-pains --url "X"`. Otherwise native flow.
 
-Determine:
-- **what_you_sell**: One sentence
-- **problem_you_solve**: One sentence
-- **market**: ISO country code (auto-detect from site content)
-- **segments**: 2-5 customer segments who PAY for this product
+## Native flow — 4-phase protocol
 
-IMPORTANT: Segments = people/businesses who PAY MONEY, not topics the website shows data about.
+### Phase 1 — Site scrape + customer-segment extraction (≤400 tokens)
 
-### Step 3: Scan Each Segment
+Fetch the site. Same fallback chain as site-audit if primary fails.
 
-FOR EACH customer segment:
+Emit `### SITE MODEL`:
 
-**3a. Compose 8 Search Queries:**
-Mix across 4 categories (LEGAL, REGULATORY, INDUSTRY COST, SPECIFIC INCIDENT).
-All queries must:
-- Include segment name verbatim
-- Include financial keywords
-- Target the detected country's regulatory agencies
-- Be in the primary language of the country
+```yaml
+url: "<input>"
+what_you_sell: "<1 sentence>"
+who_you_sell_to: "<1 sentence; role + industry + company-size context>"
+market_inferred: "<country + reasoning>"
+your_customer_segments:
+  - seg_id: seg_001
+    name: "<specific segment>"
+    industry: "<industry>"
+    size_tier: "<SMB | mid-market | enterprise>"
+    pays_for: "<what they pay your customer for; why they have budget>"
+    their_customers: "<WHO in turn pays them — these are the B2B2C population we search>"
+  - seg_id: seg_002
+    ...
+```
 
-**3b. Execute Web Searches:**
-Run each query through Sonar/web search. Collect text + citations.
+**Critical distinction:**
+- **Your customer segments** = who you sell to
+- **Their customers** = who they sell to / serve; this is where we hunt for unfairgaps
+- If the site sells B2C directly, then "their customers" = the buying persona, and we search for pains affecting them.
 
-**3c. Extract Evidence:**
-Pull every finding with: problem, financial_impact, evidence_type, source_url, who_suffers, evidence_quality.
+### Phase 2 — Per-segment candidate pools
 
-### Step 4: Filter by Relevance
+For each `seg_00X`, run 6-8 queries hunting enforcement/verdict data affecting the `their_customers` population. Query categories same as industry-scan (regulatory/legal/verdicts/aggregators).
 
-Score each finding 0.0-1.0 for relevance to the user's product:
-- 0.8-1.0: Directly related to what the product solves
-- 0.5-0.8: Related to the industry/segment
-- 0.0-0.5: Tangentially related or irrelevant
+**Crucial:** queries must target THEIR CUSTOMERS' pains, not the segment's own operational pains. E.g., if your customer is a compliance-SaaS vendor serving restaurants, search for pains that RESTAURANT OWNERS suffer — fines, lawsuits, insurance increases — not for pains the SaaS vendor suffers.
 
-Keep findings with score >= 0.5.
+Total queries: 8-12 per segment, capped at 16 across all segments if the idea has multiple.
 
-### Step 5: Cluster into Pain Topics
+Emit `### CANDIDATE POOL` with column `segment_id`.
 
-Group relevant findings by semantic similarity. Each cluster = one pain topic.
+### Phase 3 — Evidence ledger per segment
 
-### Step 6: Generate Opportunities
+Fetch top 10-14 global-ranked (not per-segment-local). Cards linked to `seg_id` via `linked_segment` field.
 
-For each pain topic:
-- **Deduplicate evidence** within the topic
-- **Generate 1 opportunity per unique evidence piece**
-- Include: problem description, who suffers, financial impact, source URL
-- **Layman hook**: One sentence a non-expert would understand ("Your customers are paying $X because...")
+### Phase 3.5 — Per-segment unfairgap detection (the product)
 
-### Step 7: Format Report
+For each segment, run the industry-scan Phase 3.5 pattern-detection logic: group events into unfairgaps with status CONFIRMED_SYSTEMIC / EMERGING / ANECDOTAL.
 
-Report includes:
-- Site overview (product, segments, market)
-- Per-segment findings summary
-- Top pain topics with evidence
-- Opportunities ranked by financial impact
-- Evidence sources table
-- Recommended next steps (how to act on these findings)
+**Then, crucially, translate each unfairgap into a sales-angle for your customer:**
 
-## Output
+```yaml
+- unfairgap_id: ug_seg_001_001
+  status: CONFIRMED_SYSTEMIC
+  hypothesis: "<plain language>"
+  corroborating_events: [ev_XXX, ev_YYY, ev_ZZZ]
+  the_unfairgap: "<systemic regulatory hole>"
+  your_customers_solution_angle: "<how YOUR CUSTOMER'S product plugs this gap, in exactly the way they would pitch it to their prospect>"
+  prospect_message_sketch: "<1-2 sentences your customer can literally paste into outbound>"
+  evidence_hook: "<specific $ fact + ev_ id they cite>"
+  target_prospect_profile: "<role + company type + why they're vulnerable>"
+```
 
-Save as `pains-{domain}-{date}.md` and display to the user.
+**Status rules same as industry-scan.** ≥3 events for CONFIRMED; 2 events = EMERGING; 1 = ANECDOTAL (appendix).
 
-## Example
+### Phase 4 — Final report
 
-User: "Find pain points for customers of https://my-saas.com"
+```
+# Customer Pain Report: {domain}
+Generated: {date}
+Skill version: 0.4.0-proto
 
-Output: 3 customer segments identified. 47 findings across 12 pain topics. Top opportunity: "Restaurant owners in your target segment are paying $4.2B/year in FDA violations - your compliance module directly addresses this."
+## What you sell
+{what_you_sell}
+
+## Your customer segments ({N})
+
+### Segment 1: {name}
+Industry: ... | Size: ... | Their customers: ...
+
+**Confirmed unfairgaps affecting their customers:**
+
+**UG_1.1: {hypothesis}**
+- Status: CONFIRMED_SYSTEMIC ({N} events)
+- Evidence: <table ev_id | event | $ | source>
+- Solution angle for your customer: {sales-angle}
+- **Pitch template for outbound:** "{prospect_message_sketch}"
+- Target prospect profile: {role + context}
+
+**UG_1.2: ...**
+
+### Segment 2: {name}
+...
+
+## Cross-segment unfairgaps
+Any unfairgap that appears in 2+ of your customer segments = horizontal opportunity (biggest leverage).
+
+## Anecdotal signals (not pitch-ready yet)
+Single-event findings. Not wedges.
+
+## Recommended next steps
+- Top 3 unfairgaps by prospect-pitch-readiness
+- Which segment has richest unfairgap density
+- Which unfairgap is EMERGING and worth watching for 1 more event
+
+## Run manifest
+<queries per segment, fetches, ledger size, unfairgap counts>
+```
+
+Save as `pains-{domain}-{YYYY-MM-DD}.md`.
+
+## Hard rules
+
+1. Unfairgaps are found in YOUR CUSTOMERS' CUSTOMERS' data — if the queries drift to "your customer's operational pain" that's a failure.
+2. Every pitch template references a specific `ev_` with $ + source URL — no generic outbound suggestions.
+3. CONFIRMED_SYSTEMIC requires ≥3 events across ≥2 companies, same as industry-scan.
+4. If a segment yields only ANECDOTAL findings, say so — don't pad.
+5. Fetch cap 14 shared across all segments. PDF-via-cache + blocked-primary workarounds same as industry-scan.

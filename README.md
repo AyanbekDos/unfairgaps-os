@@ -65,22 +65,41 @@ Each pipeline is a chain of AI prompts that:
 
 All prompts are in `prompts/` - fully transparent, fully customizable.
 
-## Quick Start
+## Quick Start — two ways to run it
 
-### Requirements
+There are **two equivalent modes**. Pick one. You can mix them per-task.
 
+### Option A — Run it in Claude Code for free (no API key)
+
+If you have Claude Code installed, you don't need any API key at all. The skills use Claude Code's built-in `WebSearch` and `WebFetch` tools directly. Just copy the skill files into your Claude Code skills folder:
+
+```bash
+git clone https://github.com/AyanbekDos/unfairgaps-os.git
+cp unfairgaps-os/skills/*.md ~/.claude/skills/
+```
+
+Then in any Claude Code session, just ask:
+
+```
+/unfairgaps-industry-scan construction in US
+/unfairgaps-validate-idea "SaaS for warehouse ergonomic compliance" in US
+/unfairgaps-site-audit https://competitor.com
+/unfairgaps-customer-pains https://my-saas.com
+```
+
+Claude Code runs the 4-phase protocol (research plan → candidate pool → evidence ledger with compressed cards → unfairgap pattern detection → final report). Output lands in your current working directory as `report-*.md` with a full run manifest for reproducibility.
+
+This is the recommended path for single-run analysis, iteration, and anyone who doesn't want to manage API keys.
+
+### Option B — Run it via CLI with a Perplexity API key (for automation / batch)
+
+If you want to script it, run it in CI, or run overnight batches, use the CLI path. It's the same 4 pipelines, same output schema — just deterministic and non-interactive.
+
+Requirements:
 - Python 3.10+
-- A Perplexity API key
+- A Perplexity API key. Perplexity gives **$5/month free API credits** to every account (~20 full pipeline runs, no credit card needed). Get one at [perplexity.ai/settings/api](https://perplexity.ai/settings/api).
 
-### Get your free API key
-
-Perplexity gives **$5/month free API credits** to every account. That's enough for ~20 full pipeline runs. No credit card needed.
-
-1. Go to [perplexity.ai/settings/api](https://perplexity.ai/settings/api)
-2. Create an API key
-3. Done.
-
-### Install
+Install:
 
 ```bash
 git clone https://github.com/AyanbekDos/unfairgaps-os.git
@@ -89,6 +108,8 @@ pip install scrapling httpx
 cp .env.example .env
 # Edit .env and paste your PERPLEXITY_API_KEY
 ```
+
+When the skill files from Option A detect `PERPLEXITY_API_KEY` in the environment, they automatically delegate to the CLI — so you can still invoke via `/unfairgaps-industry-scan` in Claude Code and it will take the faster CLI path.
 
 ### Run
 
@@ -106,21 +127,13 @@ python run.py site-audit --url "https://example.com"
 python run.py customer-pains --url "https://your-site.com"
 ```
 
-### Use as AI Agent Skill
+### AI Agent support
 
-Works with Claude Code, Cursor, Windsurf, Cline, or any AI coding assistant:
+Officially supported: **Claude Code** (full native skill flow, no API key needed — see Option A above).
 
-```bash
-cp skills/*.md ~/.claude/skills/  # for Claude Code
-```
+Unofficial: Cursor / Windsurf / Cline / other agents. Skill files are Claude Code format. In other agents they work as **prompt-copy-paste instructions only** — you'll need to paste the `SKILL.md` content into your agent and run the phases manually. Results may vary. If someone validates a full skill flow in Cursor/Windsurf, a PR updating this section is welcome.
 
-Then just ask your AI assistant:
-```
-/unfairgaps-industry-scan construction in Kazakhstan
-/unfairgaps-validate-idea "SaaS for restaurant compliance" in Germany
-/unfairgaps-site-audit https://competitor.com
-/unfairgaps-customer-pains https://my-site.com
-```
+For "I don't use any AI agent" — copy-paste the prompts from `prompts/` into ChatGPT or Claude.ai. Works too, just more manual.
 
 ### Use prompts manually
 
