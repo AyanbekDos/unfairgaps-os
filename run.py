@@ -92,7 +92,8 @@ def call_claude(system: str, user: str, max_tokens: int = 2000, temp: float = 0.
     """Call Claude via Perplexity Agent API."""
     r = httpx.post(
         AGENT_URL,
-        headers={"Authorization": f"Bearer {PERPLEXITY_API_KEY}", "Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {PERPLEXITY_API_KEY}", "Content-Type": "application/json",
+                 "X-Pplx-Integration": "unfairgaps-os"},
         json={"model": CLAUDE_MODEL, "instructions": system, "input": user,
               "max_output_tokens": max_tokens, "temperature": temp},
         timeout=120,
@@ -128,7 +129,8 @@ def call_sonar(system: str, user: str, max_tokens: int = 3000) -> dict:
     """Call Sonar via Perplexity Chat Completions. Returns {text, citations}."""
     r = httpx.post(
         SONAR_URL,
-        headers={"Authorization": f"Bearer {PERPLEXITY_API_KEY}", "Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {PERPLEXITY_API_KEY}", "Content-Type": "application/json",
+                 "X-Pplx-Integration": "unfairgaps-os"},
         json={"model": SONAR_MODEL, "messages": [
             {"role": "system", "content": system},
             {"role": "user", "content": user},
